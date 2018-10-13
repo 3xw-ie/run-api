@@ -1,0 +1,17 @@
+{
+  "name": "run-api",
+  "version": "0.0.1",
+  "description": "API for Run by 3xW.",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "intercom-client": "^2.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Dave Calnan <d@ve.ie>",
+  "license": "ISC"
+}
