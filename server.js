@@ -48,6 +48,7 @@ app.get('/intercom/:token/admins', (req, res) => {
 })
 
 app.get('/intercom/:token/counts', (req, res) => {
+  console.log(concat('Path: ', req.path, ' Token: ', req.params.token))
   const q = req.query
   if (q.type === 'user' && q.count === 'segment') {
     res.locals.intercom.counts.userSegmentCounts(response => {
