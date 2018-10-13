@@ -20,14 +20,10 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json())
 
 app.use('/intercom/:token', (req, res, next) => {
-  try {
-    res.locals.intercom = new Intercom.Client({
-      token: req.params.token
-    })
-  } catch (error) {
-    console.error(error)
-    return res.json(error)
-  }
+  console.log('Path: ', req.path, ' Token: ', req.params.token)
+  res.locals.intercom = new Intercom.Client({
+    token: req.params.token
+  })
   next()
 })
 
@@ -48,7 +44,6 @@ app.get('/intercom/:token/admins', (req, res) => {
 })
 
 app.get('/intercom/:token/counts', (req, res) => {
-  console.log('Path: ', req.path, ' Token: ', req.params.token)
   const q = req.query
   if (q.type === 'user' && q.count === 'segment') {
     res.locals.intercom.counts.userSegmentCounts(response => {
