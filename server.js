@@ -17,6 +17,11 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.use((req, res, next) => {
+  console.log(`${req.method.toUpperCase} ${req.path} STATUS: ${res.statusCode}`)
+  next()
+})
+
 app.use(bodyParser.json())
 
 app.use('/intercom/:token', (req, res, next) => {
@@ -53,11 +58,6 @@ app.get('/intercom/:token/counts', (req, res) => {
       return res.json(response.body)
     })
   }
-})
-
-app.use((req, res, next) => {
-  console.log(`${req.method.toUpperCase} ${req.path} STATUS: ${res.statusCode}`)
-  next()
 })
 
 app.listen(process.env.PORT || 3001)
