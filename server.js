@@ -41,6 +41,12 @@ app.get('/intercom/:token/users', (req, res) => {
   })
 })
 app.get('/intercom/:token/contacts', (req, res) => {
+  const q = req.query
+  if (q.email) {
+    res.locals.intercom.leads.listBy({ email: true }, response => {
+      return res.json(response.body)
+    })
+  }
   res.locals.intercom.leads.list(response => {
     return res.json(response.body)
   })
