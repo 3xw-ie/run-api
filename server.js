@@ -40,6 +40,11 @@ app.get('/intercom/:token/users', (req, res) => {
     return res.json(response.body)
   })
 })
+app.get('/intercom/:token/contacts', (req, res) => {
+  res.locals.intercom.leads.list(response => {
+    return res.json(response.body)
+  })
+})
 
 app.get('/intercom/:token/admins', (req, res) => {
   res.locals.intercom.admins.list(response => {
