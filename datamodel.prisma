@@ -1,0 +1,16 @@
+type Contact {
+  id: ID! @unique
+  email: String @unique
+  name: String
+  shortname: String
+  type: ContactType
+  category: String
+  hubspot_id: String
+  intercom_id: String
+  stripe_id: String
+}
+
+enum ContactType {
+  Lead
+  User
+}

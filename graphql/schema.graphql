@@ -1,0 +1,33 @@
+type Contact {
+  id: ID!
+  email: String
+  name: String
+  shortname: String
+  type: ContactType
+  category: String
+  hubspot_id: String
+  intercom_id: String
+  stripe_id: String
+}
+
+type Query {
+  allContacts: [Contact]!
+}
+
+type Mutation {
+  createContact(
+    email: String
+    name: String
+    shortname: String
+    type: ContactType
+    category: String
+    hubspot_id: String
+    intercom_id: String
+    stripe_id: String
+  ): Contact!
+}
+
+enum ContactType {
+  Lead
+  User
+}

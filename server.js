@@ -18,29 +18,31 @@ app.use(function (req, res, next) {
 })
 
 app.use((req, res, next) => {
-  console.log(`${req.method.toUpperCase} ${req.path} STATUS: ${res.statusCode}`)
+  console.log(`${req.method.toUpperCase()} ${req.url} STATUS: ${res.statusCode}`)
   next()
 })
 
 app.use(bodyParser.json())
 
-app.use('/intercom/:token', (req, res, next) => {
+const router = express.Router()
+
+router.use('/intercom/:token', (req, res, next) => {
   res.locals.intercom = new Intercom.Client({
     token: req.params.token
   })
   next()
 })
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   return res.send('Working.')
 })
 
-app.get('/intercom/:token/users', (req, res) => {
+router.get('/intercom/:token/users', (req, res) => {
   res.locals.intercom.users.list(response => {
     return res.json(response.body)
   })
 })
-app.get('/intercom/:token/contacts', (req, res) => {
+router.get('/intercom/:token/contacts', (req, res) => {
   const q = req.query
   if (q.email) {
     res.locals.intercom.leads.listBy({ email: true }, response => {
@@ -52,13 +54,13 @@ app.get('/intercom/:token/contacts', (req, res) => {
   })
 })
 
-app.get('/intercom/:token/admins', (req, res) => {
+router.get('/intercom/:token/admins', (req, res) => {
   res.locals.intercom.admins.list(response => {
     return res.json(response.body)
   })
 })
 
-app.get('/intercom/:token/counts', (req, res) => {
+router.get('/intercom/:token/counts', (req, res) => {
   const q = req.query
   if (q.type === 'user' && q.count === 'segment') {
     res.locals.intercom.counts.userSegmentCounts(response => {
@@ -71,4 +73,33 @@ app.get('/intercom/:token/counts', (req, res) => {
   }
 })
 
-app.listen(process.env.PORT || 3001)
+app.use('/rest', router)
+
+app.listen(process.env.PORT || 4001)
+console.log('Express Server is running on http://localhost:4001')
+
+const { prisma } = require('./generated/prisma-client')
+const { GraphQLServer } = require('graphql-yoga')
+
+const resolvers = {
+  Query: {
+    allContacts(root, args, context) {
+      return context.prisma.contacts()
+    }
+  },
+  Mutation: {
+    createContact(root, args, context) {
+      return context.prisma.createContact({ ...args })
+    }
+  }
+}
+
+const server = new GraphQLServer({
+  typeDefs: './graphql/schema.graphql',
+  resolvers,
+  context: {
+    prisma
+  }
+})
+
+server.start(() => console.log('GraphQL Server is running on http://localhost:4000'))
