@@ -5,16 +5,33 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "dotenv": "^6.1.0",
     "express": "^4.16.3",
+    "express-async-handler": "^1.1.4",
+    "googleapis": "^35.0.0",
     "graphql": "^14.0.2",
+    "graphql-request": "^1.8.2",
     "graphql-yoga": "^1.16.7",
     "intercom-client": "^2.10.2",
-    "prisma-client-lib": "^1.20.3"
+    "module-alias": "^2.1.0",
+    "prisma-client-lib": "^1.20.3",
+    "stripe": "^6.15.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "nodemon": "^1.18.6",
+    "prettier": "^1.15.2"
+  },
   "scripts": {
-    "start": "node server.js"
+    "start": "node start.js",
+    "dev": "nodemon start.js"
   },
   "author": "Dave Calnan <d@ve.ie>",
-  "license": "ISC"
+  "license": "ISC",
+  "_moduleAliases": {
+    "~": "."
+  }
 }
