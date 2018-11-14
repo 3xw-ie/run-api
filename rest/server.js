@@ -16,7 +16,7 @@ server.use(function (req, res, next) {
 })
 
 server.use((req, res, next) => {
-  console.log(`${req.method.toUpperCase()} ${req.url} STATUS: ${res.statusCode}`)
+  console.log(`${req.method.toUpperCase()} ${req.url}`)
   next()
 })
 
