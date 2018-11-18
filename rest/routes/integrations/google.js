@@ -24,8 +24,52 @@ router.get('/oauth/url', (req, res) => {
 router.post('/oauth/authenticate', asyncHandler(async (req, res) => {
   const { tokens } = await OAuth2Client.getToken(req.body.code)
     .catch(error => returnJsonError(res, error.response.data, error.response.status))
-  console.log(tokens)
   returnJson(res, tokens)
 }))
+
+router.use('*', asyncHandler(async (req, res, next) => {
+  const token = await getAccessToken(req.headers.authorization, 'googleRefresh')
+  if (!token) {
+    return res.status(500).send('Could not get Google Access Token.')
+  }
+  OAuth2Client.setCredentials({
+    refresh_token: token
+  })
+  res.locals.auth = OAuth2Client
+  next()
+}))
+
+router.use('/analytics', asyncHandler(async (req, res, next) => {
+  res.locals.analyticsreporting = google.analyticsreporting({
+    version: 'v4',
+    auth: res.locals.auth
+  })
+  next()
+}))
+
+router.post('/analytics/batchGet', (req, res) => {
+  res.locals.analyticsreporting.reports.batchGet({
+    requestBody: {
+      reportRequests: [
+        {
+          viewId: req.body.viewId,
+          dateRanges: [
+            {
+              startDate: req.body.range.startDate,
+              endDate: req.body.range.endDate
+            }
+          ],
+          metrics: [
+            {
+              expression: req.body.expression
+            }
+          ]
+        }
+      ]
+    }
+  })
+    .then(data => returnJson(res, data.data))
+    .catch(error => returnJsonError(res, error.response.data, error.response.status))
+})
 
 module.exports = router

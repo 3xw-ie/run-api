@@ -28,6 +28,7 @@ const getAccessToken = async (auth, service) => {
     id: getBearerToken(auth)
   })
     .then(response => {
+      if (!response.account) throw `Account not found with id: ${getBearerToken(auth)}`
       return response.account[`${service}Token`]
     })
     .catch(error => {
